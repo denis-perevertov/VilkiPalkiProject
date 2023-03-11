@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вилки Палки - Админка</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" th:href="@{/css/adminlte/adminlte.min.css}">
+  <link rel="stylesheet" th:href="@{/css/tables.css}">
+  <link rel="stylesheet" th:href="@{/css/sms.css}">
+  <script src="https://kit.fontawesome.com/c8bdb5141b.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+
+<div class="wrapper">
+
+  <nav th:insert="~{header-sidebar :: header}"></nav>
+  <aside th:insert="~{header-sidebar :: sidebar}"></aside>
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <h2>Telegram Bot</h2>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="container-fluid">
+        <p><b>Название: </b> VilkiPalkiAMTestBot</p>
+        <p><b>Ссылка: </b> <a href="https://t.me/VP_AM_bot" target="_blank">https://t.me/VP_AM_bot</a></p>
+        <p><b>Список пользователей: </b></p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Номер телефона</th>
+              <th>Telegram ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="user : ${telegram_users}">
+              <td th:text="${user.id}"></td>
+              <td th:text="${user.phone_number}"></td>
+              <td th:text="${user.userId}"></td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <h3 style="text-align: center; font-weight: bold;">Рассылка сообщений пользователям</h3>
+        <br>
+        <textarea style="display:block; margin-bottom: 10px;"
+                  name="text" id="tg_text" cols="100" rows="5" placeholder="Текст сообщения..."></textarea>
+        <button type="button" id="send-button" onclick="sendText()">Начать рассылку</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/adminlte.js}"></script>
+<script th:src="@{/js/Chart.min.js}"></script>
+<script th:src="@{/js/pages/dashboard3.js}"></script>
+
+<script th:inline="javascript">
+
+  function sendText() {
+    let msg = document.querySelector('#tg_text').value;
+    console.log(msg);
+    alert('Отправляем сообщение...\n' + msg);
+
+  $.post("", {text:msg}, function(data){alert(data);});
+
+  }
+</script>
+
+</body>
+</html>

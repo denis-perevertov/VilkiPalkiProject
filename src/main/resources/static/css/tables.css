@@ -1,0 +1,22 @@
+table {
+    margin-block: 10px;
+    caret-color: transparent;
+}
+
+td, th {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    background-color: gray;
+    color: white
+}
+
+td {
+    background-color: lightgray;
+}
+
+thead th {
+    cursor: pointer;
+}

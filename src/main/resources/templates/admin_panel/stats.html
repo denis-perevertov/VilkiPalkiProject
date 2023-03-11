@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вилки Палки - Админка</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" th:href="@{/css/adminlte/adminlte.min.css}">
+  <script src="https://kit.fontawesome.com/c8bdb5141b.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+
+<div class="wrapper">
+
+  <nav th:insert="~{header-sidebar :: header}"></nav>
+  <aside th:insert="~{header-sidebar :: sidebar}"></aside>
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-bold text-blue text-maroon">Статистика</h1>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-6 mb-2">
+            С: <input type="date" th:value="${month_start}" style="margin-right: 20px;" name="" id="date_from">
+            До: <input type="date" th:value="${now}" name="" id="date_to">
+            <br>
+          </div>
+          <div class="col-lg-6">
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-info">
+            <div class="inner">
+              <h3 id="user_count"></h3>
+              <p>Новых пользователей</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-bag"></i>
+            </div>
+            <a href="admin/users" class="small-box-footer">Список пользователей <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3 id="order_count"></h3>
+                <p>Новых заказов</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="admin/orders" class="small-box-footer">Список заказов <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3 id="item_count"></h3>
+                <p>Новых товаров</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="admin/items" class="small-box-footer">Список товаров <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Зарегистрированные пользователи</h3>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex">
+                  <p class="d-flex flex-column">
+                    <span class="text-bold text-lg" id="graphUserAmount" th:text="${users.size()}">820</span>
+                    <span>Новых пользователей</span>
+                  </p>
+                </div>
+                <!-- /.d-flex -->
+
+                <div id="user-container" class="position-relative mb-4">
+                  <canvas id="users-chart" height="200"></canvas>
+                </div>
+
+              </div>
+            </div>
+            <!-- /.card -->
+
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">Текущие заказы</h3>
+                <div class="card-tools">
+                  <a href="#" class="btn btn-tool btn-sm">
+                    <i class="fas fa-download"></i>
+                  </a>
+                  <a href="#" class="btn btn-tool btn-sm">
+                    <i class="fas fa-bars"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Адрес</th>
+                    <th>Цена</th>
+                    <th>Детали</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="order, iter : ${orders}" th:if="${iter.index < 10}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.address}"></td>
+                    <td th:text="${order.getTotalPrice()}">1000</td>
+                    <td>
+                      <a th:href="@{/admin/orders/{id}(id=${order.id})}" class="text-muted">
+                        <i class="fas fa-search"></i>
+                      </a>
+                    </td>
+                  </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col-md-6 -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Продажи</h3>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex">
+                  <p class="d-flex flex-column">
+                    <span id="total" class="text-bold text-lg">$18,230.00</span>
+                    <span>Общая сумма продаж</span>
+                  </p>
+
+                </div>
+                <!-- /.d-flex -->
+
+                <div id="bar-container" class="position-relative mb-4">
+                  <canvas id="sales-chart" height="200"></canvas>
+                </div>
+
+              </div>
+            </div>
+            <!-- /.card -->
+
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">Товары</h3>
+                <div class="card-tools">
+                  <a href="#" class="btn btn-tool btn-sm">
+                    <i class="fas fa-download"></i>
+                  </a>
+                  <a href="#" class="btn btn-tool btn-sm">
+                    <i class="fas fa-bars"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Детали</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="item, iter : ${items}" th:if="${iter.index < 10}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td th:text="${item.price}"></td>
+                    <td>
+                      <a th:href="'admin/items/' + ${item.id}" class="text-muted">
+                        <i class="fas fa-search"></i>
+                      </a>
+                    </td>
+                  </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- /.col-md-6 -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+  </div>
+
+  <input type="text" id="myList" style="display: none;" th:value="${users}">
+
+</div>
+<!-- ./wrapper -->
+
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/adminlte.js}"></script>
+<script th:src="@{/js/Chart.min.js}"></script>
+<script th:src="@{/js/dashboard3.js}"></script>
+
+<script th:src="@{/js/stats.js}"></script>
+
+
+
+<script th:inline="javascript">
+
+
+    let user_list = [[${users}]];
+    let order_list = [[${orders}]];
+    let item_list = [[${items}]];
+    let users_dates = [[${usersDates}]];
+
+
+  $(document).ready(function() {
+
+    console.log($("#myList").val());
+
+    let date_from = $("#date_from").val();
+    let date_to = $("#date_to").val();
+
+    console.log(user_list);
+
+    $("#user_count").text(user_list.length);
+    $("#order_count").text(order_list.length);
+    $("#item_count").text(item_list.length);
+
+    function checkDates(user) {
+        return ( user.creationDate >= $("#date_from").val() ) && ( user.creationDate <= $("#date_to").val() )
+    }
+
+    function refresh() {
+        console.log("REFRESH FUNCTION START");
+
+        console.log(user_list);
+
+        let filteredUserList = user_list.filter(checkDates);
+        let filteredOrderList = order_list.filter(checkDates);
+        let filteredItemList = item_list.filter(checkDates);
+
+        console.log(filteredUserList);
+
+        $("#user_count").text(filteredUserList.length);
+        $("#order_count").text(filteredOrderList.length);
+        $("#item_count").text(filteredItemList.length);
+        $("#graphUserAmount").text(filteredUserList.length);
+
+        drawLineChart($("#date_from").val(), $("#date_to").val(), users_dates);
+        drawBarChart($("#date_from").val(), $("#date_to").val(), order_list);
+    }
+
+
+    $("#date_from").change(refresh);
+    $("#date_to").change(refresh);
+
+    drawLineChart($("#date_from").val(), $("#date_to").val(), users_dates);
+    drawBarChart($("#date_from").val(), $("#date_to").val(), order_list);
+
+  });
+
+
+</script>
+
+
+</body>
+</html>
