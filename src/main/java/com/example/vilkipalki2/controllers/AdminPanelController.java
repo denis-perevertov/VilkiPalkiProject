@@ -248,23 +248,33 @@ public class AdminPanelController {
     @PostMapping("/items/categories/{id}")
     public String editCategorySave(@PathVariable long id,
                                    @RequestParam String category_name,
-                                   @RequestParam MultipartFile picture) throws IOException {
+                                   @RequestParam(required = false) MultipartFile picture) throws IOException {
         Category category = itemService.getSingleCategoryById(id);
         category.setName(category_name);
 
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(picture.getOriginalFilename()));
+        if(!picture.isEmpty() && picture.getOriginalFilename() != null && !picture.getOriginalFilename().equals("")) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(picture.getOriginalFilename()));
+            category.setIconFileName(fileName);
 
-        category.setIconFileName(fileName);
+            String uploadDir = imageUploadDirectory + "/categories/" + id;
+            FileUploadUtil.saveFile(uploadDir, fileName, picture);
+
+            return "redirect:/admin/items";
+        }
 
         Category savedCategory = itemService.saveCategory(category);
-        String uploadDir = imageUploadDirectory + "/categories/" + savedCategory.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, picture);
 
         return "redirect:/admin/items";
     }
 
     @GetMapping("/items/categories/{id}/delete")
-    public String deleteCategory(@PathVariable long id) {
+    public String deleteCategory(@PathVariable long id, RedirectAttributes redirectAttributes) {
+        Category category = itemService.getSingleCategoryById(id);
+        if(category.getItemList().size() > 0) {
+            redirectAttributes.addFlashAttribute("msg",
+                    "Категория должна быть пустой перед её удалением");
+            return "redirect:/admin/items/categories/" + id;
+        }
         itemService.deleteCategory(id);
         return "redirect:/admin/items";
     }
