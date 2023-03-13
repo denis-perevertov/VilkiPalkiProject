@@ -32,12 +32,14 @@ function setTemplate(input) {
 
 $(document).ready(function() {
 
-        var saved_ids = [];
+        //var saved_ids = [];
         var save_button = $("#save_users");
         var send_button = $("#send-button");
         var chosen_template = "";
 
         save_button.click(function() {
+            saved_ids = [];
+
             let checkbox_list = document.getElementsByClassName("checkbox");
             for(let i = 0; i < checkbox_list.length; i++) {
                 if(checkbox_list[i].checked) saved_ids.push(checkbox_list[i].dataset.userid);
@@ -65,7 +67,7 @@ $(document).ready(function() {
                     {users:JSON.stringify(saved_ids), template_name:JSON.stringify(chosen_template)},
                     function(returnedData) {console.log(returnedData); alert("SENT EMAILS TO USERS");}
                   )
-                  .fail(function() {console.log("error");})
+                  .fail(function(returnedData) {console.log("error"); console.log(returnedData);})
         });
 
 });

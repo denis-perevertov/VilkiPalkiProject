@@ -353,16 +353,14 @@ public class AdminPanelController {
     @PostMapping("/items/{item_id}")
     public String editItem(@ModelAttribute MenuItem item,
                           BindingResult result,
+                          RedirectAttributes redirAttrs,
                           @PathVariable long item_id,
                           @RequestParam(required = false) String item_category,
                           @RequestParam(required = false) MultipartFile picture,
                           @RequestParam(required = false) String[] selected_ingredients,
-                          RedirectAttributes redirAttrs,
                           Model model) throws IOException {
 
         try {
-
-
 
         String pictureFromDBName = itemService.getPictureOfItemByID(item_id);
         item.setPictureFileName(pictureFromDBName);
@@ -371,7 +369,7 @@ public class AdminPanelController {
         Category category = itemService.getSingleCategoryByName(item_category);
         item.setCategory(category);
 
-        if(!picture.isEmpty() && picture.getOriginalFilename() != null) {
+        if(!picture.isEmpty() && picture.getOriginalFilename() != null && !picture.getOriginalFilename().equals("")) {
             item.setPictureFileName(picture.getOriginalFilename());
             FileUploadUtil.saveFile(imageUploadDirectory, picture.getOriginalFilename(), picture);
         }
@@ -400,6 +398,8 @@ public class AdminPanelController {
         } catch(Exception e) {
             redirAttrs.addFlashAttribute("fail_message",
                     "Что-то пошло не так. " + e.getMessage());
+            redirAttrs.addFlashAttribute("org.springframework.validation.BindingResult.menuItem", result);
+            redirAttrs.addFlashAttribute("menuItem", item);
             return "redirect:/admin/items/" + item_id;
         }
 
@@ -433,7 +433,7 @@ public class AdminPanelController {
 
         if(!picture.isEmpty() && picture.getOriginalFilename() != null) {
             ingredient.setIcon(picture.getOriginalFilename());
-            FileUploadUtil.saveFile(imageUploadDirectory + "ingredients/", picture.getOriginalFilename(), picture);
+            FileUploadUtil.saveFile(imageUploadDirectory + "/ingredients/", picture.getOriginalFilename(), picture);
         }
 
         Ingredient savedIngr = ingredientService.saveIngredientToDB(ingredient);

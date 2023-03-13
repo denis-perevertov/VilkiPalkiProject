@@ -49,7 +49,7 @@
               </div>
               <a class="button" onclick="addphoto(this)">+ Добавить</a>
               <input type="file" onchange="showphoto(this)" name="banners" id="" style="display:none;">
-              <a class="button" onclick="removephoto(this)" th:attr="data-banner_id=${banner.id}">- Удалить</a>
+              <a th:href="@{/admin/banners}" class="button" onclick="removephoto(this)" th:attr="data-banner_id=${banner.id}">- Удалить</a>
             </div>
 
             <button id="add-button" type="button">+ Добавить баннер</button>
