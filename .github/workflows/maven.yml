@@ -57,6 +57,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+
     - name: Copy .war archive to server via SSH
       uses: garygrossgarten/github-action-scp@release
       with:
