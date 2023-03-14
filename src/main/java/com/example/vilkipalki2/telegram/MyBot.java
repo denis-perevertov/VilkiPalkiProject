@@ -1,5 +1,6 @@
 package com.example.vilkipalki2.telegram;
 
+import com.example.vilkipalki2.config.Config;
 import com.example.vilkipalki2.config.TelegramBotConfig;
 import com.example.vilkipalki2.models.*;
 import com.example.vilkipalki2.repos.AppUserRepository;
@@ -46,8 +47,7 @@ public class MyBot extends TelegramLongPollingBot {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    private final String uploadPath = Config.imageUploadPath;
 
     public Integer currentMessageID = 0;
 
