@@ -63,7 +63,7 @@ jobs:
       with:
         local: target/vilkipalki.war
         remote: tomcat/webapps/vilkipalki.war
-        host: kino.avada-media-dev1.od.ua
+        host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASS }}
 
