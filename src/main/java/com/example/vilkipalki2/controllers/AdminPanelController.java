@@ -1,5 +1,6 @@
 package com.example.vilkipalki2.controllers;
 
+import com.example.vilkipalki2.config.Config;
 import com.example.vilkipalki2.dto.UserDTO;
 import com.example.vilkipalki2.models.*;
 import com.example.vilkipalki2.repos.TelegramUserRepository;
@@ -8,6 +9,8 @@ import com.example.vilkipalki2.telegram.MyBot;
 import com.example.vilkipalki2.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +42,7 @@ public class AdminPanelController {
 
     private final MyBot bot;
 
-    @Value("${upload.path}")
-    public static String imageUploadDirectory = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
+    public static String imageUploadDirectory = Config.imageUploadPath;
 
     // ----------------- СТАТИСТИКА ----------------- //
 

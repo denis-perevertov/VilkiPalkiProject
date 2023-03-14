@@ -2,12 +2,14 @@ package com.example.vilkipalki2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @SpringBootApplication
 @Controller
+@PropertySource("classpath:application.properties")
 public class VilkipalkiApplication {
 
 	public static void main(String[] args) {
@@ -16,6 +18,8 @@ public class VilkipalkiApplication {
 
 	@GetMapping("/test")
 	public @ResponseBody String test() {
-		return "TEST";
+		return "test";
 	}
+
+
 }

@@ -29,17 +29,23 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+
+    - name: Adding application.properties
+      run: |
+          echo "$DEV_PROP_FILE" > src/main/resources/application.properties
+          cat src/main/resources/application.properties
+      shell: bash
+      env:
+        DEV_PROP_FILE: ${{ secrets.APPLICATION_PROPERTIES }}
+
     - name: Build with Maven
       run: mvn clean install -DskipTests
 
-    - name: Copy .war archive to server via SSH
-      uses: garygrossgarten/github-action-scp@release
+    - name: Upload artifact for deployment
+      uses: actions/upload-artifact@v2
       with:
-        local: target/vilkipalki.war
-        remote: tomcat/webapps/vilkipalki.war
-        host: kino.avada-media-dev1.od.ua
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASS }}
+        name: vilkipalki
+        path: '${{ github.workspace }}/target/*.war'
 
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
@@ -50,3 +56,24 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
+    deploy:
+      runs-on: windows-latest
+      needs: build
+      environment:
+        name: 'production'
+
+      steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: vilkipalki
+
+      - name: Copy .war archive to server via SSH
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: target/vilkipalki.war
+          remote: tomcat/webapps/vilkipalki.war
+          host: kino.avada-media-dev1.od.ua
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASS }}
