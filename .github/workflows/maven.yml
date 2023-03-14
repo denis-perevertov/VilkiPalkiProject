@@ -30,13 +30,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Adding application.properties
-      run: |
-          echo "$DEV_PROP_FILE" > src/main/resources/application.properties
-          cat src/main/resources/application.properties
-      shell: bash
-      env:
-        DEV_PROP_FILE: ${{ secrets.APPLICATION_PROPERTIES }}
+#    - name: Adding application.properties
+#      run: |
+#          echo "$DEV_PROP_FILE" > src/main/resources/application.properties
+#          cat src/main/resources/application.properties
+#      shell: bash
+#      env:
+#        DEV_PROP_FILE: ${{ secrets.APPLICATION_PROPERTIES }}
 
     - name: Build with Maven
       run: mvn clean install -DskipTests
