@@ -1,0 +1,4 @@
+FROM mdelapenya/tomcat-mysql:7.0.77
+EXPOSE 8080
+ADD target/vilkipalki.war /opt/apache-tomcat-7.0.77/webapps/vilkipalki.war
+CMD catalina.sh run

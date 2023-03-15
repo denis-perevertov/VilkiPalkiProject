@@ -42,11 +42,11 @@ public class Buttons {
 
     public static ReplyKeyboardMarkup replyMarkup() {
 
-        KeyboardButton b1r1 = new KeyboardButton("\uD83C\uDF54 Меню");
-        KeyboardButton b2r1 = new KeyboardButton("\uD83D\uDCB0 Акции");
-        KeyboardButton b1r2 = new KeyboardButton("ℹ️ О нас");
-        KeyboardButton b2r2 = new KeyboardButton("\uD83D\uDCDE Контакты");
-        KeyboardButton b1r3 = new KeyboardButton("\uD83D\uDC64 Личный кабинет");
+        KeyboardButton b1r1 = new KeyboardButton("Меню");
+        KeyboardButton b2r1 = new KeyboardButton("Акции");
+        KeyboardButton b1r2 = new KeyboardButton("О нас");
+        KeyboardButton b2r2 = new KeyboardButton("Контакты");
+        KeyboardButton b1r3 = new KeyboardButton("Кабинет");
 
         KeyboardRow r1 = new KeyboardRow(List.of(b1r1, b2r1));
         KeyboardRow r2 = new KeyboardRow(List.of(b1r2, b2r2));

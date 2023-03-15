@@ -93,7 +93,8 @@ public class MyBot extends TelegramLongPollingBot {
 
                 log.info("User " + userId + " sent his contact info, phone number: " + contact.getPhoneNumber());
                 log.info("Saving user");
-                TelegramUser user = new TelegramUser(contact.getUserId(), chatId, contact.getPhoneNumber());
+                TelegramUser user = new TelegramUser(contact.getUserId(), chatId, contact.getPhoneNumber(),
+                        contact.getFirstName(), contact.getLastName());
                 telegramUserRepository.save(user);
                 log.info("User saved");
 
@@ -140,6 +141,10 @@ public class MyBot extends TelegramLongPollingBot {
         // выделение типа сообщения по ключевым словам
         // "/start" ---> "start"
         // "/category_13" ---> "category"
+        char[] ch = receivedMessage.toCharArray();
+        for (int i = 0; i < ch.length; i++) {
+            log.info(String.valueOf(receivedMessage.charAt(i)));
+        }
         String messageType = receivedMessage.charAt(0) == '/' ? receivedMessage.split("[ /_.,!?=+-]")[1] : receivedMessage;
         log.info("Message type of the sent message: " + messageType);
 
@@ -158,14 +163,16 @@ public class MyBot extends TelegramLongPollingBot {
             case "offers":
             case "Акции":
                 offers(chatId); break;
-            case "about": about(chatId); break;
+            case "about":
+            case "О":
+                about(chatId); break;
             case "orders": history(chatId, userId); break;
             case "bonus": bonus(chatId, userId); break;
             case "contacts":
             case "Контакты":
                 contacts(chatId); break;
             case "cabinet":
-            case "Личный":
+            case "Кабинет":
                 cabinet(chatId, userId); break;
             case "profile": profile(chatId, userId); break;
             case "category": menuCategoryProcess(chatId, receivedMessage); break;
@@ -193,7 +200,7 @@ public class MyBot extends TelegramLongPollingBot {
     private void registerInDB(long chatId, long userId, TelegramUser user) {
         AppUser appUser = appUserRepository.findByPhone(user.getPhone_number()).orElse(new AppUser());
         if(appUser.getPhone() == null) appUser.setPhone(user.getPhone_number());
-        if(appUser.getName() == null) appUser.setName("TelegramUser");
+        if(appUser.getName() == null) appUser.setName(user.getFull_name());
         appUserRepository.save(appUser);
 
         SendMessage message = new SendMessage();
@@ -311,6 +318,7 @@ public class MyBot extends TelegramLongPollingBot {
             message.setText("Вы не зарегистрированы в базе данных мобильного приложения, у вас нет личного кабинета!");
 
             InlineKeyboardMarkup inlineMarkup = new InlineKeyboardMarkup(List.of(
+                    List.of(InlineKeyboardButton.builder().text("Зарегистрироваться").callbackData("/register").build()),
                     List.of(InlineKeyboardButton.builder().text("<-- Вернуться <--").callbackData("/start").build())
             ));
 
@@ -579,9 +587,9 @@ public class MyBot extends TelegramLongPollingBot {
                 "<b>Белки: </b>" + item.getPrice() + "\n" +
                 "<b>Калории: </b>" + item.getCalories() + "\n" +
                 "--- === ---" + "\n" +
-                "<b>Ингредиенты: </b>" + item.getIngredients().stream()
-                .map(Ingredient::toString)
-                .collect(Collectors.joining(","));
+                "<b>Ингредиенты: </b>\n" + item.getIngredients().stream()
+                .map(ingr -> "- " + ingr.getName())
+                .collect(Collectors.joining("\n"));
 
         message.setCaption(itemInfo);
 

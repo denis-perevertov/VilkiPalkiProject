@@ -19,6 +19,8 @@ public class TelegramUser {
 
     private String phone_number;
 
+    private String full_name;
+
     public TelegramUser() {
     }
 
@@ -26,5 +28,12 @@ public class TelegramUser {
         this.userId = userId;
         this.chatId = chatId;
         this.phone_number = phone_number;
+    }
+
+    public TelegramUser(long userId, long chatId, String phone_number, String first_name, String last_name) {
+        this.userId = userId;
+        this.chatId = chatId;
+        this.phone_number = phone_number;
+        this.full_name = first_name + " " + last_name;
     }
 }

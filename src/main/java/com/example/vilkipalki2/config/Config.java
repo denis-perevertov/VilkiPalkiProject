@@ -9,8 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.sql.DataSource;
+import java.sql.DriverManager;
 
 @Configuration
 @Log
@@ -19,7 +23,6 @@ public class Config implements WebMvcConfigurer {
     @Autowired
     Environment env;
 
-
     public static String imageUploadPath;
 
     @Override
@@ -27,7 +30,7 @@ public class Config implements WebMvcConfigurer {
 
         String activeProfile = env.getProperty("spring.profiles.active");
 
-        if(activeProfile.equals("dev")) imageUploadPath = "C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/vilkipalki/WEB-INF/classes/static/images";
+        if(activeProfile.equals("dev") || activeProfile.equals("docker")) imageUploadPath = "C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/vilkipalki/WEB-INF/classes/static/images";
         else if(activeProfile.equals("prod")) imageUploadPath = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
         else imageUploadPath = "undefined";
 
@@ -46,5 +49,18 @@ public class Config implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:///" + imageUploadPath + "/");
 
+    }
+
+    //докер контейнер использует БД хоста
+    @Bean
+    @Profile("docker")
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://host.docker.internal:3306/avada_kino");
+        dataSource.setUsername("avada_kino");
+        dataSource.setPassword("OUlIg40qOZ");
+        log.info(dataSource.toString());
+        return dataSource;
     }
 }
