@@ -9,6 +9,7 @@ import com.example.vilkipalki2.telegram.MyBot;
 import com.example.vilkipalki2.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -39,7 +40,9 @@ public class AdminPanelController {
 
     private final MyBot bot;
 
-    public static final String imageUploadDirectory = Config.imageUploadPath;
+//    public static final String imageUploadDirectory = Config.imageUploadPath;
+    @Value("${upload.path}")
+    public static String imageUploadDirectory = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
 
     // ----------------- СТАТИСТИКА ----------------- //
 
