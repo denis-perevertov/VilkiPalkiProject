@@ -32,11 +32,11 @@ public class UserService {
     }
 
     public AppUser findByLogin(String login) {
-        return userRepository.findByEmail(login);
+        return userRepository.findByEmail(login).orElseThrow();
     }
 
     public AppUser findByLoginAndPassword(String login, String password) {
-        AppUser user = userRepository.findByEmail(login);
+        AppUser user = userRepository.findByEmail(login).orElseThrow();
         if(user != null) {
             if(passwordEncoder.matches(password, user.getPassword())) return user;
         }

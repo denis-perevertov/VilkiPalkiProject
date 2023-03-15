@@ -58,7 +58,7 @@ class RepositoriesTest {
 
         AppUser savedUser = userRepository.save(user);
 
-        AppUser expected = userRepository.findByEmail(email);
+        AppUser expected = userRepository.findByEmail(email).orElseThrow();
 
         assertThat(expected).isEqualTo(savedUser);
     }
