@@ -19,6 +19,7 @@ public class Config implements WebMvcConfigurer {
     @Autowired
     Environment env;
 
+
     public static String imageUploadPath;
 
     @Override
