@@ -31,7 +31,7 @@ public class Config implements WebMvcConfigurer {
         String activeProfile = env.getProperty("spring.profiles.active");
 
         if(activeProfile.equals("dev")) imageUploadPath = "C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/vilkipalki/WEB-INF/classes/static/images";
-        else if(activeProfile.equals("prod")) imageUploadPath = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
+        else if(activeProfile.equals("prod")) imageUploadPath = "/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
         else if(activeProfile.equals("docker")) imageUploadPath = "/usr/local/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
 //        else if(activeProfile.equals("docker")) imageUploadPath = "C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/vilkipalki/WEB-INF/classes/static/images";
         else imageUploadPath = "undefined";
