@@ -61,7 +61,7 @@ public class Config implements WebMvcConfigurer {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 //        dataSource.setUrl("jdbc:mysql://host.docker.internal:3306/avada_kino"); //если коннект из контейнера к БД хоста
 //        dataSource.setUrl("jdbc:mysql://localhost:3306/avada_kino");  //если коннект из хоста к БД контейнера
-        dataSource.setUrl("jdbc:mysql://db:3306/avada_kino"); //если коннект идёт внутри сети контейнеров
+        dataSource.setUrl("jdbc:mysql://db:3306/avada_kino"); //если коннект идёт внутри сети контейнеров, db = mysql image name
         dataSource.setUsername("avada_kino");
         dataSource.setPassword("OUlIg40qOZ");
         log.info(dataSource.toString());
