@@ -1,6 +1,7 @@
 package com.example.vilkipalki2.util;
 
 import com.example.vilkipalki2.controllers.AdminPanelController;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Component
+@Log
 public class FileUploadUtil {
 
 //    @Value("${upload.path}")
@@ -30,6 +32,7 @@ public class FileUploadUtil {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
+            log.info("Path for saving the image: " + filePath);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);

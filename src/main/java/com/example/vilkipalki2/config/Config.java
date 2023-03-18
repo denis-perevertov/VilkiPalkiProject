@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 
 @Configuration
 @Log
@@ -24,6 +25,9 @@ public class Config implements WebMvcConfigurer {
     Environment env;
 
     public static String imageUploadPath;
+
+    @Value("${upload.path}")
+    public static String propertiesUploadPath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -37,6 +41,7 @@ public class Config implements WebMvcConfigurer {
         else imageUploadPath = "undefined";
 
         log.info(imageUploadPath);
+        log.info("FROM PROPERTIES INSIDE CONFIG : " + propertiesUploadPath);
 
         registry.addResourceHandler("/**")
         .addResourceLocations("classpath:/static/", "classpath:/public/",
@@ -54,17 +59,38 @@ public class Config implements WebMvcConfigurer {
     }
 
     //докер контейнер использует БД хоста
-    @Bean
-    @Profile("docker")
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//        dataSource.setUrl("jdbc:mysql://host.docker.internal:3306/avada_kino"); //если коннект из контейнера к БД хоста
-//        dataSource.setUrl("jdbc:mysql://localhost:3306/avada_kino");  //если коннект из хоста к БД контейнера
-        dataSource.setUrl("jdbc:mysql://db:3306/avada_kino"); //если коннект идёт внутри сети контейнеров, db = mysql image name
-        dataSource.setUsername("avada_kino");
-        dataSource.setPassword("OUlIg40qOZ");
-        log.info(dataSource.toString());
-        return dataSource;
+//    @Bean
+//    @Profile("docker")
+//    public DataSource dataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+////        dataSource.setUrl("jdbc:mysql://host.docker.internal:3306/avada_kino"); //если коннект из контейнера к БД хоста
+////        dataSource.setUrl("jdbc:mysql://localhost:3306/avada_kino");  //если коннект из хоста к БД контейнера
+//        dataSource.setUrl("jdbc:mysql://db:3306/avada_kino"); //если коннект идёт внутри сети контейнеров, db = mysql image name
+//        dataSource.setUsername("avada_kino");
+//        dataSource.setPassword("OUlIg40qOZ");
+//        log.info(dataSource.toString());
+//        return dataSource;
+//    }
+
+    @Bean(name="uploadPath")
+    public String imageUploadPathBean() {
+        String activeProfile = env.getProperty("spring.profiles.active");
+        String uploadPath = "";
+        switch(activeProfile) {
+            case "dev":
+                uploadPath = "C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/vilkipalki/WEB-INF/classes/static/images";
+                break;
+            case "prod":
+                uploadPath = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
+                break;
+            case "docker":
+                uploadPath = "/usr/local/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
+                break;
+            default:
+                uploadPath = "undefined";
+        }
+        log.info("UPLOAD PATH FROM BEAN IS : " + uploadPath);
+        return uploadPath;
     }
 }

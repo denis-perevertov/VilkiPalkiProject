@@ -9,6 +9,8 @@ import com.example.vilkipalki2.telegram.MyBot;
 import com.example.vilkipalki2.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,8 +43,14 @@ public class AdminPanelController {
     private final MyBot bot;
 
 //    public static final String imageUploadDirectory = Config.imageUploadPath;
-    @Value("${upload.path}")
     public static String imageUploadDirectory = "/opt/tomcat/webapps/vilkipalki/WEB-INF/classes/static/images";
+
+    @Value("${upload.path}")
+    public static String propertiesUploadDirectory;
+
+    @Autowired
+    @Qualifier("uploadPath")
+    public static String beanUploadDirectory;
 
     // ----------------- СТАТИСТИКА ----------------- //
 
@@ -50,6 +58,8 @@ public class AdminPanelController {
     public String showStatsPage(Model model) {
 
         log.info("IMAGE UPLOAD PATH IS : " + imageUploadDirectory);
+        log.info("IMAGE UPLOAD PATH FROM PROPERTIES IS : " + propertiesUploadDirectory);
+        log.info("IMAGE UPLOAD PATH FROM BEAN IS : " + beanUploadDirectory);
 
         List<AppUser> userList = userService.getAllUsers();
 
