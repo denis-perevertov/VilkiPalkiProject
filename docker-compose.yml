@@ -14,7 +14,6 @@ services:
     ports:
       - "3306:3306"
 
-
   phpmyadmin:
     depends_on:
       - db
@@ -23,7 +22,6 @@ services:
       - '8888:80'
     environment:
       PMA_HOST: db
-
 
   vilkipalki:
     depends_on:
